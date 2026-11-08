@@ -12,7 +12,14 @@ builder.Services.AddOptions<AdminAuthOptions>()
 builder.Services.AddApplication();
 builder.Services.AddInfrastructureDataAccess();
 builder.Services.AddControllers();
+builder.Services.AddSwaggerGen();
 
 WebApplication application = builder.Build();
+application.UseSwagger();
+application.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "ATM System API v1");
+    options.DocumentTitle = "ATM System API";
+});
 application.MapControllers();
 application.Run();
