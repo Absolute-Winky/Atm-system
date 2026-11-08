@@ -1,0 +1,75 @@
+@baseUrl = http://localhost:5000
+@adminPassword = local-demo-password
+@accountNumber = 100001
+@pinCode = 1234
+@adminSessionKey = {{adminLogin.response.body.$.sessionKey}}
+@userSessionKey = {{userLogin.response.body.$.sessionKey}}
+
+### 1. Открыть сессию администратора
+# @name adminLogin
+POST {{baseUrl}}/api/sessions/admin
+Content-Type: application/json
+
+{
+  "password": "{{adminPassword}}"
+}
+
+### 2. Создать счёт
+POST {{baseUrl}}/api/accounts/create
+Content-Type: application/json
+
+{
+  "sessionKey": "{{adminSessionKey}}",
+  "accountNumber": {{accountNumber}},
+  "pinCode": {{pinCode}}
+}
+
+### 3. Открыть сессию пользователя
+# @name userLogin
+POST {{baseUrl}}/api/sessions/user
+Content-Type: application/json
+
+{
+  "accountNumber": {{accountNumber}},
+  "pinCode": {{pinCode}}
+}
+
+### 4. Пополнить счёт на 1000
+POST {{baseUrl}}/api/accounts/deposit
+Content-Type: application/json
+
+{
+  "sessionKey": "{{userSessionKey}}",
+  "amount": 1000
+}
+
+### 5. Снять 250; после предыдущего запроса останется 750
+POST {{baseUrl}}/api/accounts/withdraw
+Content-Type: application/json
+
+{
+  "sessionKey": "{{userSessionKey}}",
+  "amount": 250
+}
+
+### 6. Посмотреть баланс
+POST {{baseUrl}}/api/accounts/balance
+Content-Type: application/json
+
+{
+  "sessionKey": "{{userSessionKey}}"
+}
+
+### 7. Посмотреть историю операций
+POST {{baseUrl}}/api/accounts/history
+Content-Type: application/json
+
+{
+  "sessionKey": "{{userSessionKey}}"
+}
+
+### 8. Закрыть сессию пользователя
+DELETE {{baseUrl}}/api/sessions/{{userSessionKey}}
+
+### 9. Закрыть сессию администратора
+DELETE {{baseUrl}}/api/sessions/{{adminSessionKey}}

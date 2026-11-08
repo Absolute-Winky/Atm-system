@@ -1,0 +1,17 @@
+**/bin/
+**/obj/
+**/TestResults/
+**/coverage/
+.vs/
+.idea/
+*.user
+*.suo
+*.log
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+**/appsettings.Local.json
+**/appsettings.*.Local.json
+*.http.private.env.json
